@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            color: #000;
+        }
+
+        /* ── Roll Number ── */
+        .roll-row {
+            text-align: right;
+            margin-bottom: 2px;
+        }
+
+        .roll-label {
+            font-size: 11pt;
+            border-bottom: 1px solid #000;
+            padding-bottom: 1px;
+        }
+
+        /* ── University Header ── */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+        }
+
+        .header-table td {
+            vertical-align: middle;
+            padding: 0;
+        }
+
+        .header-logo {
+            width: 70px;
+        }
+
+        .header-logo img {
+            width: 65px;
+            height: 65px;
+        }
+
+        .univ-name {
+            text-align: center;
+            font-size: 18pt;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .exam-title {
+            text-align: center;
+            font-size: 10.5pt;
+            font-weight: bold;
+            letter-spacing: .3px;
+            margin-bottom: 2px;
+        }
+
+        /* ── Meta Info Table ── */
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+        }
+
+        .meta-table td {
+            padding: 1px 0;
+            font-size: 10.5pt;
+            width: 50%;
+        }
+
+        .meta-table .bold {
+            font-weight: bold;
+        }
+
+        /* ── Horizontal divider ── */
+        hr {
+            border: none;
+            border-top: 1.2px solid #000;
+            margin: 3px 0;
+        }
+
+        /* ── Note line ── */
+        .note {
+            font-size: 10pt;
+            font-weight: bold;
+            margin: 3px 0 8px 0;
+            line-height: 1.4;
+        }
+
+        /* ── Section container ── */
+        .section {
+            margin-bottom: 25px;
+        }
+
+        /* ── Section header row ── */
+        .section-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            border-bottom: none;
+        }
+
+        .section-header-table td {
+            padding: 4px 8px;
+            font-weight: bold;
+            font-size: 10.5pt;
+            vertical-align: middle;
+        }
+
+        .section-header-table .col-header-btl,
+        .section-header-table .col-header-co {
+            width: 44px;
+            text-align: center;
+            border-left: 1px solid #000;
+            font-weight: bold;
+        }
+
+        /* ── Question rows table ── */
+        .questions-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+        }
+
+        .questions-table tr td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            font-size: 10.5pt;
+            vertical-align: top;
+        }
+
+        .col-qno {
+            width: 52px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .col-text {
+            text-align: left;
+        }
+
+        .col-btl {
+            width: 44px;
+            text-align: center;
+        }
+
+        .col-co {
+            width: 44px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Roll Number -->
+    <div class="roll-row">
+        <span class="roll-label">Roll No. &nbsp; _________________</span>
+    </div>
+
+    <!-- University Header with Logo -->
+    <table class="header-table">
+        <tr>
+            <td class="header-logo">
+                <img src="{{ logo_path }}" alt="COER">
+            </td>
+            <td>
+                <div class="univ-name">COER UNIVERSITY</div>
+            </td>
+            <td class="header-logo">&nbsp;</td>
+        </tr>
+    </table>
+
+    <div class="exam-title">
+        {{ paper.exam_type|upper }}, SESSION: {{ paper.session }}
+    </div>
+
+    <hr>
+
+    <!-- Meta Info -->
+    <table class="meta-table">
+        <tr>
+            <td>
+                <span class="bold">Time:</span> {{ paper.duration }}
+            </td>
+            <td>
+                <span class="bold">Max Marks:</span> {{ paper.max_marks }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="bold">Program Name &amp; Specialization:</span>
+                {{ paper.program }}
+            </td>
+            <td>
+                <span class="bold">Semester:</span> {{ paper.semester }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="bold">Course Name:</span> {{ paper.course_name }}
+            </td>
+            <td>
+                <span class="bold">Course Code:</span> {{ paper.course_code }}
+            </td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <!-- Note -->
+    <div class="note">
+        Note: {{ paper.instructions }}
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART A -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    {% if part_a %}
+    <div class="section">
+        <table class="section-header-table">
+            <tr>
+                <td colspan="2">
+                    <div>PART – A</div>
+                    <div style="font-size: 9pt; font-weight: normal; margin-top: 2px;">Attempt all questions. Each Question carries 1 mark.</div>
+                </td>
+                <td class="col-header-btl">BTL</td>
+                <td class="col-header-co">CO</td>
+            </tr>
+        </table>
+        <table class="questions-table">
+            {% for q in part_a %}
+            <tr>
+                <td class="col-qno">Q{{ forloop.counter }}.</td>
+                <td class="col-text">{{ q.formatted_text|linebreaksbr }}</td>
+                <td class="col-btl">{{ q.btl }}</td>
+                <td class="col-co">{{ q.co }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART B -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    {% if part_b %}
+    <div class="section">
+        <table class="section-header-table">
+            <tr>
+                <td colspan="2">
+                    <div>PART – B</div>
+                    <div style="font-size: 9pt; font-weight: normal; margin-top: 2px;">Attempt any three questions. Each Question carries 2 marks.</div>
+                </td>
+                <td class="col-header-btl">BTL</td>
+                <td class="col-header-co">CO</td>
+            </tr>
+        </table>
+        <table class="questions-table">
+            {% for q in part_b %}
+            <tr>
+                <td class="col-qno">Q{{ forloop.counter }}.</td>
+                <td class="col-text">{{ q.formatted_text|linebreaksbr }}</td>
+                <td class="col-btl">{{ q.btl }}</td>
+                <td class="col-co">{{ q.co }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- PART C -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    {% if part_c %}
+    <div class="section">
+        <table class="section-header-table">
+            <tr>
+                <td colspan="2">
+                    <div>PART – C</div>
+                    <div style="font-size: 9pt; font-weight: normal; margin-top: 2px;">Attempt any three questions. Each Question carries 3 marks.</div>
+                </td>
+                <td class="col-header-btl">BTL</td>
+                <td class="col-header-co">CO</td>
+            </tr>
+        </table>
+        <table class="questions-table">
+            {% for q in part_c %}
+            <tr>
+                <td class="col-qno">Q{{ forloop.counter }}.</td>
+                <td class="col-text">{{ q.formatted_text|linebreaksbr }}</td>
+                <td class="col-btl">{{ q.btl }}</td>
+                <td class="col-co">{{ q.co }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+</body>
+</html>

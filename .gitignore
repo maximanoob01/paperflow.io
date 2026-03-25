@@ -1,0 +1,15 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+db.sqlite3
+.env
+.gemini/
+
+# Node
+node_modules/
+dist/
+.next/
+out/
+build/
