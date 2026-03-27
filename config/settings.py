@@ -2,6 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import dj_database_url
+import urllib.parse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -58,17 +59,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ── BULLETPROOF DATABASE SECTION ──
-# This forces Django to use dj_database_url if the variable exists. 
-# If it doesn't (like on your local PC), it falls back to SQLite automatically.
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
-# ──────────────────────────────────
+# --- EXPLICIT DATABASE CONFIGURATION ---
+# Get the URL from the environment (Render or .env)
+db_url_string = os.environ.get('DATABASE_URL')
+
+if db_url_string:
+    # If a URL exists, parse it manually
+    url = urllib.parse.urlparse(db_url_string)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port or '5432',
+            'OPTIONS': {'sslmode': 'require'},
+        }
+    }
+else:
+    # If no URL exists (like on a fresh PC), use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+# ---------------------------------------
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -113,4 +130,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField
