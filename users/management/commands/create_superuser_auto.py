@@ -3,13 +3,20 @@ from users.models import User
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
-        if not User.objects.filter(username='admin').exists():
-            User.objects.create_superuser(
-                username='admin',
-                email='admin@coer.ac.in',
-                password='Admin@1234',
-                department='Examination Cell'
-            )
-            self.stdout.write('Superuser created: admin / Admin@1234')
+        username = 'admin'
+        password = 'CoerAdmin@2025'
+        email    = 'admin@coer.ac.in'
+
+        user, created = User.objects.get_or_create(username=username)
+        user.email        = email
+        user.is_staff     = True
+        user.is_superuser = True
+        user.is_active    = True
+        user.department   = 'Examination Cell'
+        user.set_password(password)
+        user.save()
+
+        if created:
+            self.stdout.write(f'Superuser CREATED: {username} / {password}')
         else:
-            self.stdout.write('Superuser already exists')
+            self.stdout.write(f'Superuser UPDATED: {username} / {password}')
