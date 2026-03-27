@@ -1,5 +1,5 @@
-# Use an official Python runtime
-FROM python:3.10-slim
+# Use an official Python 3.12 runtime
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
