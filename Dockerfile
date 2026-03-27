@@ -1,34 +1,23 @@
-# Use an official Python runtime
-FROM python:3.10-slim
+FROM python:3.12-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Install WeasyPrint system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    python3-pip \
-    python3-setuptools \
-    python3-wheel \
-    python3-cffi \
-    libcairo2 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libgdk-pixbuf2.0-0 \
-    libffi-dev \
-    shared-mime-info
-
-# Set work directory
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt /app/
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libffi-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project (this will now skip venv and .env thanks to .dockerignore)
-COPY . /app/
+COPY . .
 
-# Run collectstatic, run migrations, and start the server ALL at boot!
-CMD python manage.py collectstatic --noinput && python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"]
