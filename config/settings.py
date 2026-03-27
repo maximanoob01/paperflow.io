@@ -1,7 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 import os
-import dj_database_url  # ADDED THIS IMPORT
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -58,25 +58,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ── THIS IS THE FIXED DATABASE SECTION ──
-if 'DATABASE_URL' in os.environ:
-    # If we are on Render, automatically parse the Neon URL
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    # If we are developing locally, fallback to SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-# ────────────────────────────────────────
+# ── BULLETPROOF DATABASE SECTION ──
+# This forces Django to use dj_database_url if the variable exists. 
+# If it doesn't (like on your local PC), it falls back to SQLite automatically.
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
+# ──────────────────────────────────
 
 AUTH_USER_MODEL = 'users.User'
 
